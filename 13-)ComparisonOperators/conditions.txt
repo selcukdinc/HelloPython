@@ -1,0 +1,13 @@
+if temperature is greater than 30
+    it's a hot day
+otherwise if it's less than 10
+    it's a cold day
+otherwise
+    it's niether hot nor cold
+
+if name is less tahan 3 characters long
+    name must be at least 3 characters
+otherwise if it's more than 50 characters long
+    name can be a maximum of 50 characters
+otherwise
+    name looks good!
