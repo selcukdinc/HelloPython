@@ -1,0 +1,11 @@
+Numbers
+Strings
+Booleans
+---
+List
+Dictionaries
+
+-- Exercise --
+Person
+    - name
+    - talk()
