@@ -29,7 +29,7 @@ jobs:
           get_branch_commits() {
             local branch_name="$1"
             branch_info="${branch_info}- ${branch_name}\n"
-            branch_info="${branch_info}$(git log "origin/$branch_name" -3 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b" | awk '
+            branch_info="${branch_info}$(git log "origin/$branch_name" -15 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b" | awk '
               BEGIN { RS = ""; FS = "\n" }
               {
                 print "  - " $1
