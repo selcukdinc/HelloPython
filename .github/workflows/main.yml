@@ -29,7 +29,12 @@ jobs:
           get_branch_commits() {
             local branch_name="$1"
             branch_info="${branch_info}- ${branch_name}\n"
-            branch_info="${branch_info}$(git log "origin/$branch_name" -15 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b" | awk '
+            
+            local filter_message1="Update README with latest branch commits"
+            local filter_message2="Update main.yml"
+            
+            branch_info="${branch_info}$(git log "origin/$branch_name" -15 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b\
+            --grep="$filter_message1" --invert-grep --grep="$filter_message2" --invert-grep | awk '
               BEGIN { RS = ""; FS = "\n" }
               {
                 print "   \n" $1
