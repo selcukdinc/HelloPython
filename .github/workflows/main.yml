@@ -32,7 +32,7 @@ jobs:
             branch_info="${branch_info}$(git log "origin/$branch_name" -15 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b" | awk '
               BEGIN { RS = ""; FS = "\n" }
               {
-                print "   " $1
+                print "   \n" $1
                 if (NF > 1) {
                   for (i = 2; i <= NF; i++) {
                     print "      - " $i
