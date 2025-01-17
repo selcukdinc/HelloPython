@@ -35,7 +35,7 @@ jobs:
                 print "  - " $1
                 if (NF > 1) {
                   for (i = 2; i <= NF; i++) {
-                    print "    - " $i
+                    print "  - " $i
                   }
                 } else {
                   print "      - No description provided."
