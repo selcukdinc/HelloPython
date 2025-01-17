@@ -33,7 +33,7 @@ jobs:
             local filter_message1="Update README with latest branch commits"
             local filter_message2="Update main.yml"
             
-            branch_info="${branch_info}$(git log "origin/$branch_name" -15 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b\
+            branch_info="${branch_info}$(git log "origin/$branch_name" -15 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b" \
             --grep="$filter_message1" --invert-grep --grep="$filter_message2" --invert-grep | awk '
               BEGIN { RS = ""; FS = "\n" }
               {
