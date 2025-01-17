@@ -1,0 +1,74 @@
+name: Update README with Latest Branch Commits
+
+on:
+  push:
+    branches:
+      - '**'  # Tüm branch'lerdeki push işlemlerini tetikle
+  workflow_dispatch:  # Manuel olarak tetiklemek için
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Tüm branch'leri çeker
+
+      - name: Append Branch Info to README
+        run: |
+        
+          # Mevcut README içeriğini oku, ancak "# Branch Information" ve sonrasını 
+          existing_content=$(awk '/# Branch Information/{exit} {print}' README.md)
+          
+          # Yeni içeriği oluştur
+          branch_info="# Branch Information\n\n"
+          branch_info="${branch_info}\n\n"
+
+          # Branch commit bilgilerini çeken fonksiyon
+          get_branch_commits() {
+            local branch_name="$1"
+            branch_info="${branch_info}- ${branch_name}\n"
+            branch_info="${branch_info}$(git log "origin/$branch_name" -3 --date=format:'%d.%m.%Y' --pretty=format:"  - %ad - %h - %s%n%b" | awk '
+              BEGIN { RS = ""; FS = "\n" }
+              {
+                print "  - " $1
+                if (NF > 1) {
+                  for (i = 2; i <= NF; i++) {
+                    print "    - " $i
+                  }
+                } else {
+                  print "    - No description provided."
+                }
+              }
+            ')"
+            branch_info="${branch_info}\n\n"
+          }
+      
+          # Tüm diğer branch'leri dolaş ve bilgileri ekle
+          for branch in $(git branch -r | grep -v 'HEAD\|main'); do
+            branch_name=${branch#origin/}
+            get_branch_commits "$branch_name"
+          done
+      
+          # Main branch'in bilgilerini ekle
+          get_branch_commits "main"
+          
+          # Mevcut içeriğin altına branch bilgilerini ekle
+          echo -e "${existing_content}\n\n${branch_info}" > README.md
+        shell: bash
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          if ! git commit -m "Update README with latest branch commits"; then
+            if [ $? -ne 0 ]; then
+                echo "Error during commit"
+                exit 1
+            else
+                echo "No changes to commit"
+            fi
+          fi
+          git push origin main
